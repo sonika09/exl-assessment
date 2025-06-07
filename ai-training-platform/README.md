@@ -116,3 +116,6 @@ It supports two roles:
 ```bash
 git clone https://github.com/YOUR_USERNAME/ai-training-platform.git
 cd ai-training-platform
+
+
+// vercel - https://exl-assessment-9qlj.vercel.app/

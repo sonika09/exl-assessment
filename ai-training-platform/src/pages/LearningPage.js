@@ -1,146 +1,62 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Typography,
-  Modal,
-  TextField,
-  IconButton,
-  List,
-  ListItem,
-  Divider,
-  Drawer
+  Box, IconButton, Drawer, Typography, Divider,
 } from '@mui/material';
-import MicIcon from '@mui/icons-material/Mic';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-
-const dummySections = [
-  'Introduction',
-  'Chapter 1: Basics',
-  'Chapter 2: Advanced Topics',
-  'Conclusion'
-];
+import VideoPlayer from '../components/VideoPlayer';
+import QnAComponent from '../components/QnAComponent';
+import { dummySummaries } from '../utils/mockApi';
 
 const LearningPage = () => {
-  const videoRef = useRef(null);
-  const [questions, setQuestions] = useState([]);
-  const [openQA, setOpenQA] = useState(false);
-  const [questionInput, setQuestionInput] = useState('');
-  const [handRaisedAt, setHandRaisedAt] = useState(null);
-  const [selectedSection, setSelectedSection] = useState(0);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handlePlay = () => videoRef.current.play();
-  const handlePause = () => videoRef.current.pause();
-  const handleForward = () => (videoRef.current.currentTime += 10);
-  const handleBackward = () => (videoRef.current.currentTime -= 10);
-
-  const handleRaiseHand = () => {
-    setHandRaisedAt(videoRef.current.currentTime.toFixed(2));
-  };
-
-  const handleQuestionSubmit = () => {
-    if (questionInput.trim()) {
-      setQuestions([...questions, questionInput]);
-      setQuestionInput('');
-    }
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
   };
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Grid container spacing={4}>
-        {/* Main Video Area */}
-        <Grid item xs={12} md={8}>
-          <Box position="relative">
-            <video
-              ref={videoRef}
-              width="100%"
-              controls
-              src="https://www.w3schools.com/html/mov_bbb.mp4"
-            >
-              Your browser does not support the video tag.
-            </video>
-            <Box mt={2} display="flex" gap={2}>
-              <Button onClick={handlePlay}>Play</Button>
-              <Button onClick={handlePause}>Pause</Button>
-              <Button onClick={handleBackward}>-10s</Button>
-              <Button onClick={handleForward}>+10s</Button>
-              <Button color="warning" onClick={handleRaiseHand}>
-                Raise Hand
-              </Button>
-              <IconButton color="primary" onClick={() => setOpenQA(true)}>
-                <QuestionAnswerIcon />
-              </IconButton>
-            </Box>
-            {handRaisedAt && (
-              <Typography sx={{ mt: 1 }}>
-                ✋ Hand raised at {handRaisedAt}s
-              </Typography>
-            )}
-          </Box>
-        </Grid>
+    <Box p={4}>
+      {/* Q&A Icon */}
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <IconButton onClick={toggleDrawer(true)} color="primary">
+          <QuestionAnswerIcon fontSize="large" />
+        </IconButton>
+      </Box>
 
-        {/* Sidebar with Course Contents */}
-        <Grid item xs={12} md={4}>
-          <Typography variant="h6">📄 Course Contents</Typography>
-          <List>
-            {dummySections.map((section, idx) => (
-              <ListItem
-                key={idx}
-                button
-                selected={selectedSection === idx}
-                onClick={() => setSelectedSection(idx)}
-              >
-                {section}
-              </ListItem>
-            ))}
-          </List>
-        </Grid>
-      </Grid>
+      {/* Video Player */}
+      <VideoPlayer />
 
-      {/* Q&A Modal */}
-      <Modal open={openQA} onClose={() => setOpenQA(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            borderRadius: 2,
-            boxShadow: 24,
-            p: 4
-          }}
+      {/* Raise Hand (logs timestamp) */}
+      <Box mt={2}>
+        <button
+          onClick={() =>
+            console.log(`✋ Raised hand at: ${new Date().toLocaleTimeString()}`)
+          }
         >
-          <Typography variant="h6" mb={2}>Ask a Question</Typography>
-          <TextField
-            label="Type your question"
-            fullWidth
-            multiline
-            rows={3}
-            value={questionInput}
-            onChange={(e) => setQuestionInput(e.target.value)}
-          />
-          <Box mt={2} display="flex" justifyContent="space-between">
-            <IconButton>
-              <MicIcon />
-            </IconButton>
-            <Button variant="contained" onClick={handleQuestionSubmit}>
-              Submit
-            </Button>
-          </Box>
-          <Divider sx={{ mt: 2, mb: 1 }} />
-          <Typography variant="subtitle2">Previous Questions:</Typography>
-          <List dense>
-            {questions.map((q, i) => (
-              <ListItem key={i}>{q}</ListItem>
+          ✋ Raise Hand
+        </button>
+      </Box>
+
+      {/* Drawer for Q&A and Course Content */}
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <Box width={350} role="presentation" p={2}>
+          <Typography variant="h6">Ask a Question</Typography>
+          <QnAComponent />
+
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="h6">Course Contents</Typography>
+          <ul>
+            {dummySummaries.map((summary, index) => (
+              <li key={index}>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Section {index + 1}
+                </Typography>
+              </li>
             ))}
-          </List>
+          </ul>
         </Box>
-      </Modal>
-    </Container>
+      </Drawer>
+    </Box>
   );
 };
 
