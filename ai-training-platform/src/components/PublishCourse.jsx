@@ -1,7 +1,5 @@
-// File: src/components/PublishCourse.jsx
-
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Paper } from '@mui/material';
 import { publishCourse } from '../utils/mockApi';
 
 const PublishCourse = ({ summaries, avatar, videoGenerated }) => {
@@ -17,13 +15,29 @@ const PublishCourse = ({ summaries, avatar, videoGenerated }) => {
   };
 
   return (
-    <Box mb={4}>
-      <Typography variant="h6">🚀 Publish Course</Typography>
+    <Box
+      mb={4}
+      sx={{
+        p: { xs: 2, sm: 3 },
+        backgroundColor: '#fdfdfd',
+        borderRadius: 2,
+        boxShadow: 1,
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        🚀 Publish Course
+      </Typography>
+
       <Button
         variant="contained"
+        fullWidth
         disabled={!summaries.length || !avatar || !videoGenerated}
         onClick={handlePublish}
-        sx={{ mt: 2 }}
+        sx={{
+          mt: 2,
+          textTransform: 'none',
+          fontWeight: 500,
+        }}
       >
         Publish
       </Button>

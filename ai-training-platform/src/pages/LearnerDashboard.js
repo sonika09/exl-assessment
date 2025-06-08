@@ -1,6 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
-import { AppBar, Tabs, Tab, Box, Container, Typography, TextField, Grid } from '@mui/material';
+import {
+  AppBar,
+  Tabs,
+  Tab,
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Grid,
+  useTheme,
+  useMediaQuery
+} from '@mui/material';
 import CourseCard from '../components/CourseCard';
 import { getPublishedCourses } from '../utils/mockApi';
 import Certificates from './Certificate';
@@ -11,6 +21,9 @@ const LearnerDashboard = () => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   useEffect(() => {
     setCourses(getPublishedCourses());
   }, []);
@@ -19,20 +32,29 @@ const LearnerDashboard = () => {
     alert(`Continue Course ID: ${courseId}`);
   };
 
-  const filteredCourses = courses.filter(course => course.title.toLowerCase().includes(searchTerm.toLowerCase()));
-  const completedCourses = courses.filter(c => c.progress === 100);
+  const filteredCourses = courses.filter(course =>
+    course.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>Learner Dashboard</Typography>
-      <AppBar position="static">
-        <Tabs value={tab} onChange={(e, newTab) => setTab(newTab)}>
-          <Tab label="Home" style={{color:"white"}}/>
-          <Tab label="My Learning" style={{color:"white"}}/>
-          <Tab label="Certificates" style={{color:"white"}}/>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" gutterBottom align={isMobile ? 'center' : 'left'}>
+        Learner Dashboard
+      </Typography>
+
+      <AppBar position="static" color="primary">
+        <Tabs
+          value={tab}
+          onChange={(e, newTab) => setTab(newTab)}
+          variant={isMobile ? 'fullWidth' : 'standard'}
+        >
+          <Tab label="Home" />
+          <Tab label="My Learning" />
+          <Tab label="Certificates" />
         </Tabs>
       </AppBar>
 
+      {/* Home Tab */}
       {tab === 0 && (
         <Box mt={3}>
           <Grid container spacing={2}>
@@ -50,6 +72,7 @@ const LearnerDashboard = () => {
         </Box>
       )}
 
+      {/* My Learning Tab */}
       {tab === 1 && (
         <Box mt={3}>
           <TextField
@@ -75,22 +98,13 @@ const LearnerDashboard = () => {
         </Box>
       )}
 
+      {/* Certificates Tab */}
       {tab === 2 && (
         <Box mt={3}>
-          <Typography variant="h6" gutterBottom>Download Certificates</Typography>
-          <Grid container spacing={2}>
-            <Certificates/>
-            {/* {completedCourses.map((course) => (
-              <Grid item xs={12} sm={6} md={4} key={course.id}>
-                <CourseCard
-                  title={course.title}
-                  progress={course.progress}
-                  thumbnail={course.videoUrl}
-                  onContinue={() => alert('Download Certificate (Mock)')}
-                />
-              </Grid>
-            ))} */}
-          </Grid>
+          <Typography variant="h6" gutterBottom align={isMobile ? 'center' : 'left'}>
+            Download Certificates
+          </Typography>
+          <Certificates />
         </Box>
       )}
     </Container>
