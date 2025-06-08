@@ -1,10 +1,12 @@
-// File: src/pages/AdminDashboard.jsx
-
+// AdminDashboard.jsx
 import React, { useState } from 'react';
-import { Container, Typography, Grid, Box } from '@mui/material';
+import { Container, Grid, Box, Paper, Typography } from '@mui/material';
 import CourseBuilder from '../components/CourseBuilder';
 import AvatarVideoGenerator from '../components/AvatarVideoGenerator';
 import PublishCourse from '../components/PublishCourse';
+// import SummaryPreview from '../components/SummaryPreview';
+// import VideoPreview from '../components/VideoPreview';
+import VideoPlayer from '../components/VideoPlayer';
 
 const AdminDashboard = () => {
   const [summaries, setSummaries] = useState([]);
@@ -12,67 +14,56 @@ const AdminDashboard = () => {
   const [videoGenerated, setVideoGenerated] = useState(false);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: { xs: 2, sm: 4 }, mb: 4 }}>
-      <Typography 
-        variant="h4" 
-        gutterBottom 
-        sx={{ textAlign: { xs: 'center', sm: 'left' }, fontSize: { xs: '1.8rem', sm: '2.5rem' } }}
-      >
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 6 }}>
+      <Typography variant="h4" gutterBottom fontWeight={700} textAlign="center">
         Admin Dashboard
       </Typography>
 
-      <Grid container spacing={4}>
-        {/* Course Builder Section */}
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              borderRadius: 2,
-              boxShadow: 1,
-              bgcolor: '#fafafa',
-            }}
-          >
+      {/* Top section: grouped three components */}
+      <Paper
+        elevation={3}
+        sx={{ p: 3, borderRadius: 3, backgroundColor: '#f9f9f9', mb: 4 }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={4}>
             <CourseBuilder setSummaries={setSummaries} />
-          </Box>
-        </Grid>
+          </Grid>
 
-        {/* Avatar + Video Generator */}
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              borderRadius: 2,
-              boxShadow: 1,
-              bgcolor: '#f0f4ff',
-            }}
-          >
+          <Grid item xs={12} md={4}>
             <AvatarVideoGenerator
               selectedAvatar={selectedAvatar}
               setSelectedAvatar={setSelectedAvatar}
               setVideoGenerated={setVideoGenerated}
               videoGenerated={videoGenerated}
             />
-          </Box>
-        </Grid>
+          </Grid>
 
-        {/* Publish Course */}
-        <Grid item xs={12}>
-          <Box
-            sx={{
-              p: { xs: 2, sm: 3 },
-              borderRadius: 2,
-              boxShadow: 1,
-              bgcolor: '#e8f5e9',
-            }}
-          >
+          <Grid item xs={12} md={4}>
             <PublishCourse
               summaries={summaries}
               avatar={selectedAvatar}
               videoGenerated={videoGenerated}
             />
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Paper>
+
+      {/* Bottom section: Summaries and Video preview side-by-side */}
+      {(summaries.length > 0 || videoGenerated) && (
+        <Grid container spacing={3}>
+          {summaries.length > 0 && (
+            <Grid item xs={12} md={6}>
+              {/* <SummaryPreview summaries={summaries} /> */}
+            </Grid>
+          )}
+
+          {/* {videoGenerated && (
+            <Grid item xs={12} md={6}>
+              <VideoPlayer />
+            </Grid>
+          )} */}
+        </Grid>
+      )}
     </Container>
   );
 };

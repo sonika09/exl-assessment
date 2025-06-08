@@ -48,9 +48,9 @@ const LearnerDashboard = () => {
           onChange={(e, newTab) => setTab(newTab)}
           variant={isMobile ? 'fullWidth' : 'standard'}
         >
-          <Tab label="Home" />
-          <Tab label="My Learning" />
-          <Tab label="Certificates" />
+          <Tab label="Home" style={{color:"white"}}/>
+          <Tab label="My Learning" style={{color:"white"}}/>
+          <Tab label="Certificates" style={{color:"white"}}/>
         </Tabs>
       </AppBar>
 

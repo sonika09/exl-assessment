@@ -27,36 +27,48 @@ const CourseBuilder = ({ setSummaries }) => {
   };
 
   return (
-    <Box mb={4} sx={{ p: { xs: 2, sm: 3 }, backgroundColor: '#fdfdfd', borderRadius: 2 }}>
+    <Box>
       <Typography variant="h6" gutterBottom>
         📄 Course Builder
       </Typography>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+      <Stack spacing={1} sx={{ maxWidth: 500, width: '100%', mb: 2 }}>
         <input
           type="file"
           onChange={(e) => setFileName(e.target.files[0]?.name || '')}
-          style={{ maxWidth: '100%' }}
         />
         {fileName && (
-          <Typography variant="body2" sx={{ mt: { xs: 1, sm: 0 } }}>
-            Selected: <strong>{fileName}</strong>
+          <Typography variant="body2" color="textSecondary">
+            Selected file: <strong>{fileName}</strong>
           </Typography>
         )}
+        <Button
+          onClick={handleUpload}
+          variant="contained"
+          disabled={!fileName}
+        >
+          Generate Summaries
+        </Button>
       </Stack>
 
-      <Button onClick={handleUpload} variant="contained" sx={{ mt: 2, width: { xs: '100%', sm: 'auto' } }}>
-        Generate Summaries
-      </Button>
-
       {localSummaries.length > 0 && (
-        <Box mt={3}>
+        <Box
+          mt={2}
+          sx={{
+            maxHeight: { xs: 250, md: 300 },
+            overflowY: 'auto',
+            backgroundColor: '#fafafa',
+            p: 2,
+            borderRadius: 2,
+            boxShadow: 1,
+          }}
+        >
           {localSummaries.map((s, i) => (
             <Paper
               key={i}
               sx={{
-                p: { xs: 2, sm: 3 },
-                mt: 2,
+                p: 2,
+                mb: 2,
                 borderRadius: 2,
                 backgroundColor: '#f5f5f5',
               }}
@@ -75,7 +87,7 @@ const CourseBuilder = ({ setSummaries }) => {
               <Button
                 variant="outlined"
                 size="small"
-                sx={{ mt: 1, width: { xs: '100%', sm: 'auto' } }}
+                sx={{ mt: 1 }}
               >
                 Regenerate (Mock)
               </Button>

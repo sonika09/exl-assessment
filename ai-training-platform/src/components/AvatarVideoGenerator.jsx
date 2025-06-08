@@ -20,29 +20,38 @@ const AvatarVideoGenerator = ({
     setTimeout(() => {
       setGenerating(false);
       setVideoGenerated(true);
-    }, 2000); // Simulate video generation
+    }, 2000);
   };
 
   return (
-    <Box mb={4} sx={{ p: { xs: 2, sm: 3 }, backgroundColor: '#f9f9f9', borderRadius: 2 }}>
+    <Box
+      sx={{
+        p: { xs: 2, sm: 3 },
+        // backgroundColor: '#f9f9f9',
+        // borderRadius: 2,
+        // minHeight: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Typography variant="h6" gutterBottom>
         🧑‍🚀 Avatar & Video Generator
       </Typography>
 
       <Grid container spacing={2} mt={1}>
         {avatars.map((avatar) => (
-          <Grid item xs={12} sm={6} md={4} lg={2} key={avatar.id}>
+          <Grid item xs={6} sm={4} key={avatar.id}>
             <Card
               onClick={() => setSelectedAvatar(avatar)}
               sx={{
-                border: selectedAvatar?.id === avatar.id ? '2px solid blue' : '',
+                border: selectedAvatar?.id === avatar.id ? '2px solid #1976d2' : '1px solid #ddd',
                 cursor: 'pointer',
-                height: '100%',
+                transition: 'border 0.3s',
               }}
             >
               <CardMedia
                 component="img"
-                height="120"
+                height="100"
                 image={avatar.image}
                 alt={avatar.name}
                 sx={{ objectFit: 'contain' }}
@@ -57,50 +66,43 @@ const AvatarVideoGenerator = ({
         ))}
       </Grid>
 
-      <Box mt={3} textAlign={{ xs: 'center', sm: 'left' }}>
+      <Box mt={3}>
         <Button
           disabled={!selectedAvatar || generating}
           variant="contained"
+          fullWidth
           onClick={handleGenerate}
-          sx={{ minWidth: 150 }}
         >
           {generating ? <CircularProgress size={24} /> : 'Generate Video'}
         </Button>
       </Box>
 
       {videoGenerated && (
-        <Box mt={3} textAlign="center">
+        <Box mt={3}>
           {!showPreview ? (
+            <Button variant="outlined" fullWidth onClick={() => setShowPreview(true)}>
+              Preview Video
+            </Button>
+          ) : (
             <>
-              <Box
-                component="img"
-                src="https://via.placeholder.com/300x180.png?text=Video+Preview"
-                alt="Video Placeholder"
-                sx={{
-                  width: { xs: '100%', sm: 300 },
-                  maxWidth: '100%',
-                  borderRadius: 2,
-                }}
-              />
+              <Button variant="outlined" fullWidth onClick={() => setShowPreview(false)}>
+                Hide Video
+              </Button>
+
               <Box mt={2}>
-                <Button variant="outlined" onClick={() => setShowPreview(true)}>
-                  Preview Video
-                </Button>
+                <video
+                  width="100%"
+                  height="auto"
+                  controls
+                  autoPlay
+                  style={{ borderRadius: 8, maxHeight: '300px' }}
+                  poster="https://via.placeholder.com/300x180.png?text=Video+Preview"
+                >
+                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </Box>
             </>
-          ) : (
-            <Box sx={{ width: '100%', maxWidth: 500, mx: 'auto' }}>
-              <video
-                width="100%"
-                controls
-                autoPlay
-                poster="https://via.placeholder.com/300x180.png?text=Video+Preview"
-                style={{ borderRadius: 8 }}
-              >
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </Box>
           )}
         </Box>
       )}
